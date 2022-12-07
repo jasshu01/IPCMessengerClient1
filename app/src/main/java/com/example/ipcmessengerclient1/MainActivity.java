@@ -15,7 +15,10 @@ import android.os.Messenger;
 import android.os.RemoteException;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -34,17 +37,10 @@ public class MainActivity extends AppCompatActivity {
             switch (msg.what) {
                 case FROM_SERVER_TO_CLIENT:
 
-                    Log.d("MymessengerClient", "" + msg.getData().getString("FROM_SERVER_TO_CLIENT"));
-
-//                    Message message = Message.obtain(null, FROM_SERVER_TO_CLIENT);
-//                    Bundle bundle = new Bundle();
-//                    bundle.putString("FROM_SERVER_TO_CLIENT", "Hey Client! , I Received Your Message");
-//                    message.setData(bundle);
-//                    try {
-//                        ClientMessenger.send(message);
-//                    } catch (RemoteException e) {
-//                        e.printStackTrace();
-//                    }
+                    TextView textView = findViewById(R.id.textView);
+                    String str=msg.getData().getString("FROM_SERVER_TO_CLIENT");
+                    textView.setText(str);
+                    Log.d("MymessengerClient", "" + str);
 
 
                 default:
@@ -62,19 +58,24 @@ public class MainActivity extends AppCompatActivity {
             Messenger messenger = new Messenger(iBinder);
 
 
-            TextView textView = findViewById(R.id.textView);
-            textView.setOnClickListener(new View.OnClickListener() {
+            Button sendBtn = findViewById(R.id.sendBtn);
+            EditText sendMessage = findViewById(R.id.sendMessage);
+            sendBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
 
                     Message message = Message.obtain(null, FROM_CLIENT_TO_SERVER);
 
                     Bundle data = new Bundle();
-                    data.putString("FROM_CLIENT_TO_SERVER", "Hey Server !");
+                    String msg = String.valueOf(sendMessage.getText());
+                    sendMessage.setText("");
+                    data.putString("FROM_CLIENT_TO_SERVER", "Hey Server ! " + msg);
                     message.setData(data);
                     message.replyTo = ClientMessenger;
                     try {
                         messenger.send(message);
+
+                        Toast.makeText(MainActivity.this, "Message Sent", Toast.LENGTH_SHORT).show();
                     } catch (RemoteException e) {
                         e.printStackTrace();
                     }
