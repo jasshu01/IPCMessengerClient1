@@ -33,8 +33,18 @@ public class MainActivity extends AppCompatActivity {
 
             switch (msg.what) {
                 case FROM_SERVER_TO_CLIENT:
-                    Log.d("MymessengerClient", "" + msg);
-//                    Log.d("MymessengerClient", "" + msg.getData().getString("FROM_CLIENT_TO_SERVER"));
+
+                    Log.d("MymessengerClient", "" + msg.getData().getString("FROM_SERVER_TO_CLIENT"));
+
+//                    Message message = Message.obtain(null, FROM_SERVER_TO_CLIENT);
+//                    Bundle bundle = new Bundle();
+//                    bundle.putString("FROM_SERVER_TO_CLIENT", "Hey Client! , I Received Your Message");
+//                    message.setData(bundle);
+//                    try {
+//                        ClientMessenger.send(message);
+//                    } catch (RemoteException e) {
+//                        e.printStackTrace();
+//                    }
 
 
                 default:
@@ -49,14 +59,14 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
             Log.d("MymessengerClient", "service Connected");
-            Messenger serverAppMessenger = new Messenger(iBinder);
+            Messenger messenger = new Messenger(iBinder);
 
 
             TextView textView = findViewById(R.id.textView);
             textView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-//                    Message message = Message.obtain(null, FROM_CLIENT_TO_SERVER, 1, 2);
+
                     Message message = Message.obtain(null, FROM_CLIENT_TO_SERVER);
 
                     Bundle data = new Bundle();
@@ -64,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
                     message.setData(data);
                     message.replyTo = ClientMessenger;
                     try {
-                        serverAppMessenger.send(message);
+                        messenger.send(message);
                     } catch (RemoteException e) {
                         e.printStackTrace();
                     }
