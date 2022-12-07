@@ -25,37 +25,37 @@ public class MainActivity extends AppCompatActivity {
     static final int FROM_CLIENT_TO_SERVER = 1;
     static final int FROM_SERVER_TO_CLIENT = 2;
 
-    Messenger ClientMessenger = new Messenger(new ClientHandler());
+//    Messenger ClientMessenger = new Messenger(new ClientHandler());
 
-    class ClientHandler extends Handler {
-        @Override
-        public void handleMessage(@NonNull Message msg) {
-            super.handleMessage(msg);
-
-            Log.d("MymessengerClient", "Client : handling Message");
-
-            switch (msg.what) {
-                case FROM_SERVER_TO_CLIENT:
-
-                    TextView textView = findViewById(R.id.textView);
-                    String str=msg.getData().getString("FROM_SERVER_TO_CLIENT");
-                    textView.setText(str);
-                    Log.d("MymessengerClient", "" + str);
-
-
-                default:
-                    super.handleMessage(msg);
-            }
-
-
-        }
-    }
+//    class ClientHandler extends Handler {
+//        @Override
+//        public void handleMessage(@NonNull Message msg) {
+//            super.handleMessage(msg);
+//
+//            Log.d("MymessengerClient", "Client : handling Message");
+//
+//            switch (msg.what) {
+//                case FROM_SERVER_TO_CLIENT:
+//
+//                    TextView textView = findViewById(R.id.textView);
+//                    String str = msg.getData().getString("FROM_SERVER_TO_CLIENT");
+//                    textView.setText(str);
+//                    Log.d("MymessengerClient", "" + str);
+//
+//
+//                default:
+//                    super.handleMessage(msg);
+//            }
+//
+//
+//        }
+//    }
 
     ServiceConnection serviceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
-            Log.d("MymessengerClient", "service Connected");
-            Messenger messenger = new Messenger(iBinder);
+            Log.d("MymessengerClient", "Client : Connected to " + componentName.getPackageName());
+            Messenger ServerMessenger = new Messenger(iBinder);
 
 
             Button sendBtn = findViewById(R.id.sendBtn);
@@ -69,11 +69,11 @@ public class MainActivity extends AppCompatActivity {
                     Bundle data = new Bundle();
                     String msg = String.valueOf(sendMessage.getText());
                     sendMessage.setText("");
-                    data.putString("FROM_CLIENT_TO_SERVER", "Hey Server ! " + msg);
+                    data.putString("FROM_CLIENT_TO_SERVER", "Hey Server! " + msg);
                     message.setData(data);
-                    message.replyTo = ClientMessenger;
+//                    message.replyTo = ClientMessenger;
                     try {
-                        messenger.send(message);
+                        ServerMessenger.send(message);
 
                         Toast.makeText(MainActivity.this, "Message Sent", Toast.LENGTH_SHORT).show();
                     } catch (RemoteException e) {

@@ -3,8 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <queries>
-        <package android:name="com.example.ipcmessengerserver"/>
+        <package android:name="com.example.ipcmessengerserver" />
     </queries>
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -15,6 +16,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.IPCMessengerClient1"
         tools:targetApi="31">
+        <service
+            android:name=".MessengerClientService"
+            android:enabled="true"
+            android:exported="true"></service>
+
         <activity
             android:name=".MainActivity"
             android:exported="true">
